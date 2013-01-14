@@ -20,8 +20,10 @@ module ActsAsTaggableOn::Taggable
           context_tags     = tags_type.to_sym
 
           class_eval do
+            # used this issue and resulting PR to fix issue https://github.com/mbleigh/acts-as-taggable-on/issues/187
+            
             has_many context_taggings, :as => :taggable, :dependent => :destroy, :include => :tag, :class_name => "ActsAsTaggableOn::Tagging",
-            :conditions => ["#{ActsAsTaggableOn::Tagging.table_name}.tag_id = #{ActsAsTaggableOn::Tag.table_name}.id AND #{ActsAsTaggableOn::Tagging.table_name}.context = ?", tags_type]
+            :conditions => ["#{ActsAsTaggableOn::Tagging.table_name}.context = ?", tags_type]
             has_many context_tags, :through => context_taggings, :source => :tag, :class_name => "ActsAsTaggableOn::Tag"
           end
 
